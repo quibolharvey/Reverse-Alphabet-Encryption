@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Alphabet Encryption</title>
+    <style>
+        :root {
+            --primary-color: #6366F1;
+            --primary-hover: #4F46E5;
+            --bg-color: #F3F4F6;
+            --card-bg: #FFFFFF;
+            --text-color: #1F2937;
+            --border-color: #E5E7EB;
+            --output-bg: #F9FAFB;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        h2 {
+            color: var(--text-color);
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.75rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        button {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .btn-secondary {
+            background-color: #E5E7EB;
+            color: #4B5563;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #D1D5DB;
+        }
+        
+        .output-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--primary-color);
+            font-size: 0.875rem;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        .copy-btn:hover {
+            text-decoration: underline;
+        }
+        
+        .output-box {
+            background: var(--output-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            min-height: 30px;
+            word-break: break-word;
+            font-family: monospace;
+            font-size: 1rem;
+        }
+        
+        .clear-btn {
+            display: block;
+            margin: 1rem auto 0;
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: #6B7280;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+        
+        .clear-btn:hover {
+            background-color: #F3F4F6;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Reverse Alphabet Encryption</h2>
+        
+        <div class="form-group">
+            <label for="inputText">Enter Text</label>
+            <input type="text" id="inputText" placeholder="Type your message here..." autocomplete="off">
+        </div>
+        
+        <div class="button-container">
+            <button class="btn-primary" onclick="encryptText()">Encrypt</button>
+            <button class="btn-primary" onclick="decryptText()">Decrypt</button>
+        </div>
+        
+        <div class="output-section">
+            <div class="output-header">
+                <h3>Encrypted Text</h3>
+                <button id="copy-outputText" class="copy-btn" onclick="copyText('outputText')">Copy</button>
+            </div>
+            <div id="outputText" class="output-box"></div>
+        </div>
+        
+        <div class="output-section">
+            <div class="output-header">
+                <h3>Decrypted Text</h3>
+                <button id="copy-decryptedText" class="copy-btn" onclick="copyText('decryptedText')">Copy</button>
+            </div>
+            <div id="decryptedText" class="output-box"></div>
+        </div>
+        
+        <button class="clear-btn" onclick="clearAll()">Clear All</button>
+    </div>
+    <script>
+        function reverseAlphabetEncrypt(text) {
+            let encryptedText = '';
+            for (let char of text) {
+                if (char.match(/[a-z]/i)) {
+                    let isUpper = char === char.toUpperCase();
+                    let reversedChar = String.fromCharCode(219 - char.toLowerCase().charCodeAt(0));
+                    encryptedText += isUpper ? reversedChar.toUpperCase() : reversedChar;
+                } else {
+                    encryptedText += char;
+                }
+            }
+            return encryptedText;
+        }
+        function encryptText() {
+            let inputText = document.getElementById("inputText").value;
+            let encryptedText = reverseAlphabetEncrypt(inputText);
+            document.getElementById("outputText").innerText = encryptedText;
+        }
+        function decryptText() {
+            let inputText = document.getElementById("outputText").innerText;
+            let decryptedText = reverseAlphabetEncrypt(inputText);
+            document.getElementById("decryptedText").innerText = decryptedText;
+        }
+        function copyText(id) {
+            const text = document.getElementById(id).innerText;
+            if (!text) return;
+            
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    const copyBtn = document.getElementById(`copy-${id}`);
+                    const originalText = copyBtn.innerText;
+                    copyBtn.innerText = "Copied!";
+                    setTimeout(() => {
+                        copyBtn.innerText = originalText;
+                    }, 1500);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+        }
+        function clearAll() {
+            document.getElementById("inputText").value = "";
+            document.getElementById("outputText").innerText = "";
+            document.getElementById("decryptedText").innerText = "";
+        }
+    </script>
+</body>
+</html>
